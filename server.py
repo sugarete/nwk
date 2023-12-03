@@ -28,7 +28,8 @@ def ErrorLoginResponse(status):
 def ErrorRegisterResponse(status):
     messages = {
         0: "Register successfully.",
-        1: "Account is already registered. Please Sign in."
+        1: "Password is not long enough (>5 words). Please try again.",
+        2: "Account is already registered. Please Sign in."
     }
     msg = messages.get(status, "Unknown error")
     return f'<script>alert("{msg}");</script>'
@@ -36,7 +37,7 @@ def ErrorRegisterResponse(status):
 def ErrorChangePwdResponse(status):
     messages = {
         0: "Change password successfully.",
-        1: "Password is not long enough. Please try again.",
+        1: "Password is not long enough (>5 words). Please try again.",
         2: "Incorrect username or password. Please try again.",
     }
     msg = messages.get(status, "Unknown error")
