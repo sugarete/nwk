@@ -2,6 +2,7 @@ import socket, threading
 import login as login
 import register as register
 import yt as yt
+import change_pwd as cpwd
 
 #Setup--------------------------------------------------------------
 HOST = "0.0.0.0"
@@ -32,6 +33,15 @@ def ErrorRegisterResponse(status):
     msg = messages.get(status, "Unknown error")
     return f'<script>alert("{msg}");</script>'
 
+def ErrorChangePwdResponse(status):
+    messages = {
+        0: "Change password successfully.",
+        1: "Password is not long enough. Please try again.",
+        2: "Incorrect username or password. Please try again.",
+    }
+    msg = messages.get(status, "Unknown error")
+    return f'<script>alert("{msg}");</script>'
+
 #RenderHTML--------------------------------------------------------------
 def create_response(content):
     """Create a simple HTTP response."""
@@ -53,18 +63,20 @@ def handle_http_request(addr, request):
             return create_response(read_html("app/templates/login.html"))
         elif uri == "/register":
             return create_response(read_html("app/templates/register.html"))
-        elif uri == "/vidlist":
-            video_list = yt.list_videos()
-            return create_response(read_html("app/templates/vidlist.html") + video_list)
         elif uri == "/cpwd":
             return create_response(read_html("app/templates/cpwd.html"))
         elif uri.startswith("/videos/"):
             return yt.createVideoResponse(yt.handle_video_request(request))
+        elif uri == "/vidlist":
+            video_list = yt.list_videos()
+            return create_response(read_html("app/templates/vidlist.html") + video_list)
         else :
             return create_response(read_html("app/templates/404.html"))
     # Handles HTTP POST requests.Register, Signin, Download
     elif method == "POST":
-        if uri == "/":
+        if uri == "/submit-url":
+            return yt.createVideoResponse(yt.youtubeProcessing(request))
+        elif uri == "/":
             logstring = request.splitlines()[-1]
             check = login.checkLogin(logstring)
             if check == 0:    
@@ -77,8 +89,12 @@ def handle_http_request(addr, request):
                 return create_response(read_html("app/templates/login.html") + ErrorRegisterResponse(check))
             else :
                 return create_response(read_html("app/templates/register.html") + ErrorRegisterResponse(check))
-        elif uri == "/submit-url":
-            return yt.createVideoResponse(yt.youtubeProcessing(request))
+        elif uri == "/cpwd":
+            check = cpwd.change_pwd(request)
+            if check == 0:
+                return create_response(read_html("app/templates/login.html") + ErrorChangePwdResponse(check))
+            else :
+                return create_response(read_html("app/templates/cpwd.html") + ErrorChangePwdResponse(check))
         else :
             return create_response(read_html("app/templates/404.html"))
     else:
@@ -97,7 +113,6 @@ def clientHandler(conn, addr):
 def main(): 
     mainServer = createServerSocket()
     print("SERVER SIDE: ", HOST, " : ", SERVER_PORT)
-
     try:
         while True: 
             conn, addr = mainServer.accept()
@@ -108,9 +123,6 @@ def main():
     except KeyboardInterrupt:
         print("Shutting down the server...")
         mainServer.close()
-
-    print("End")
-    mainServer.close()
 
 #Launch--------------------------------------------------------------
 if __name__ == "__main__": 
