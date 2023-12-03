@@ -43,6 +43,23 @@ def createVideoResponse(video_path):
     ).encode(FORMAT) + video_content
     return response
 
+#ScriptMessage--------------------------------------------------------------
+def ErrorLoginResponse(status):
+    match status:
+        case 1: 
+            msg = "Incorrect username or password. Please try again."
+        case 2: 
+            msg = "Username is not available. Please Register."
+        case 3:
+            msg = "Account is already logged-in."
+    return f'<script>alert("{msg}");</script>'
+
+def ErrorRegisterResponse(status):
+    match status:
+        case 1: 
+            msg = "Account is already registered. Please Sigin."
+    return f'<script>alert("{msg}");</script>'
+
 #RenderHTML--------------------------------------------------------------
 def create_response(content):
     """Create a simple HTTP response."""
@@ -63,18 +80,23 @@ def handle_http_request(addr, request):
             return create_response(read_html("app/templates/login.html"))
         elif uri == "/register":
             return create_response(read_html("app/templates/register.html"))
+        else :
+            return create_response(read_html("app/templates/404.html"))
     elif method == "POST":
         if uri == "/":
+            logstring = request.splitlines()[-1]
             if "username=admin&password=admin" in request:
                 return create_response(read_html("app/templates/home.html"))
             else:
-                return create_response(read_html("app/templates/login.html"))
-        elif uri == "/register":
+                return create_response(read_html("app/templates/login.html") + ErrorLoginResponse(1))
+        elif uri == "/register":    
             return create_response(read_html("app/templates/login.html"))
         elif uri == "/submit-url":
             return createVideoResponse(youtubeProcessing(request))
+        else :
+            return create_response(read_html("app/templates/404.html"))
     else:
-        return create_response(read_html("404.html"))
+        return create_response(read_html("app/templates/404.html")) 
 
 #Multithreading--------------------------------------------------------------  
 def clientHandler(conn, addr):
