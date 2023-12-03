@@ -1,8 +1,6 @@
 from pytube import YouTube
-import socket 
+import socket, os, threading
 from urllib.parse import unquote
-import os
-import threading
 
 #Setup--------------------------------------------------------------
 HOST = "0.0.0.0"
@@ -45,19 +43,19 @@ def createVideoResponse(video_path):
 
 #ScriptMessage--------------------------------------------------------------
 def ErrorLoginResponse(status):
-    match status:
-        case 1: 
-            msg = "Incorrect username or password. Please try again."
-        case 2: 
-            msg = "Username is not available. Please Register."
-        case 3:
-            msg = "Account is already logged-in."
+    messages = {
+        1: "Incorrect username or password. Please try again.",
+        2: "Username is not available. Please Register.",
+        3: "Account is already logged-in."
+    }
+    msg = messages.get(status, "Unknown error")
     return f'<script>alert("{msg}");</script>'
 
 def ErrorRegisterResponse(status):
-    match status:
-        case 1: 
-            msg = "Account is already registered. Please Sigin."
+    messages = {
+        1: "Account is already registered. Please Sign in."
+    }
+    msg = messages.get(status, "Unknown error")
     return f'<script>alert("{msg}");</script>'
 
 #RenderHTML--------------------------------------------------------------
@@ -89,7 +87,8 @@ def handle_http_request(addr, request):
                 return create_response(read_html("app/templates/home.html"))
             else:
                 return create_response(read_html("app/templates/login.html") + ErrorLoginResponse(1))
-        elif uri == "/register":    
+        elif uri == "/register":
+            logstring = request.splitlines()[-1]    
             return create_response(read_html("app/templates/login.html"))
         elif uri == "/submit-url":
             return createVideoResponse(youtubeProcessing(request))
@@ -112,13 +111,17 @@ def main():
     print("SERVER SIDE: ", HOST, " : ", SERVER_PORT)
 
     while True: 
-        conn, addr = mainServer.accept()
-        thr = threading.Thread(target=clientHandler, args=(conn, addr))
-        thr.daemon = True
-        thr.start()
-    
+        try:
+            conn, addr = mainServer.accept()
+            thr = threading.Thread(target=clientHandler, args=(conn, addr))
+            thr.daemon = True
+            thr.start()
+        except KeyboardInterrupt: 
+            break
+        
+    print("End")
     mainServer.close()
-    
+
 #Launch--------------------------------------------------------------
 if __name__ == "__main__": 
     main()
