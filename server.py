@@ -43,7 +43,7 @@ def read_html(file_path):
 
 #Webdirect--------------------------------------------------------------
 def handle_http_request(addr, request):
-    """Handles HTTP requests."""
+    # Extract the required information from the given request.
     request_line = request.split('\n')
     method, uri = request_line[0].split()[:2]
     print("client addr ", addr, "with request: ", method, uri)
@@ -56,6 +56,8 @@ def handle_http_request(addr, request):
         elif uri == "/vidlist":
             video_list = yt.list_videos()
             return create_response(read_html("app/templates/vidlist.html") + video_list)
+        elif uri == "/cpwd":
+            return create_response(read_html("app/templates/cpwd.html"))
         elif uri.startswith("/videos/"):
             return yt.createVideoResponse(yt.handle_video_request(request))
         else :
@@ -86,6 +88,7 @@ def handle_http_request(addr, request):
 def clientHandler(conn, addr):
     request = conn.recv(1024).decode(FORMAT)
     if request != "":
+        print("client addr ", addr, "with request: ", request)
         response = handle_http_request(addr, request)
         conn.sendall(response)
     conn.close()

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="data:," />
+    <title>Register</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            border: 2px solid #333;
+            /* You can change the color */
+            padding: 20px;
+            border-radius: 10px;
+            /* Adjust the radius as needed */
+            text-align: center;
+            width: 300px;
+            /* Adjust the width as needed */
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+        }
+
+        input[type="submit"] {
+            background-color: #a72828;
+            /* You can change the color */
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .login-link {
+            display: block;
+            margin-top: 15px;
+            color: #00ccff;
+            /* You can change the color */
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <form action="/cpwd" method="POST">
+        <h1>Change Password</h1>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required autocomplete="off" />
+        <label for="oldpassword">Old Password:</label>
+        <input type="password" id="password" name="oldpassword" required autocomplete="off" />
+        <label for="newpassword">New Password:</label>
+        <input type="password" id="password" name="password" required autocomplete="off" />
+        <input type="submit" value="Register" autocomplete="off" />
+        <a class="login-link" href="/login">Already have an account? Login</a>
+    </form>
+</body>
+
+</html>
