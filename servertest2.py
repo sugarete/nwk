@@ -2,6 +2,7 @@ from pytube import YouTube
 import socket, os, threading
 from urllib.parse import unquote
 import login as login
+import register  as register
 
 #Setup--------------------------------------------------------------
 HOST = "0.0.0.0"
@@ -45,15 +46,16 @@ def createVideoResponse(video_path):
 #ScriptMessage--------------------------------------------------------------
 def ErrorLoginResponse(status):
     messages = {
+        0: "Login successfully.",
         1: "Incorrect username or password. Please try again.",
         2: "Username is not available. Please Register.",
-        3: "Account is already logged-in."
     }
     msg = messages.get(status, "Unknown error")
     return f'<script>alert("{msg}");</script>'
 
 def ErrorRegisterResponse(status):
     messages = {
+        0: "Register successfully.",
         1: "Account is already registered. Please Sign in."
     }
     msg = messages.get(status, "Unknown error")
@@ -84,13 +86,17 @@ def handle_http_request(addr, request):
     elif method == "POST":
         if uri == "/":
             logstring = request.splitlines()[-1]
-            if login.checkLogin(logstring) == 0:
-                return create_response(read_html("app/templates/home.html"))
+            check = login.checkLogin(logstring)
+            if check == 0:    
+                return create_response(read_html("app/templates/home.html") + ErrorLoginResponse(check))
             else:
-                return create_response(read_html("app/templates/login.html") + ErrorLoginResponse(login.checkLogin(logstring)))
+                return create_response(read_html("app/templates/login.html") + ErrorLoginResponse(check))
         elif uri == "/register":
-            logstring = request.splitlines()[-1]    
-            return create_response(read_html("app/templates/login.html"))
+            check = register.register_handle(request)
+            if check == 0:
+                return create_response(read_html("app/templates/login.html") + ErrorRegisterResponse(check))
+            else :
+                return create_response(read_html("app/templates/register.html") + ErrorRegisterResponse(check))
         elif uri == "/submit-url":
             return createVideoResponse(youtubeProcessing(request))
         else :
@@ -98,12 +104,12 @@ def handle_http_request(addr, request):
     else:
         return create_response(read_html("app/templates/404.html")) 
 
-#Multithreading--------------------------------------------------------------  
+#Multithreading----------------------------------------------------
 def clientHandler(conn, addr):
     request = conn.recv(1024).decode(FORMAT)
-    # print("client addr ", addr, "with request:", request)
-    response = handle_http_request(addr, request)
-    conn.sendall(response)
+    if request != "":
+        response = handle_http_request(addr, request)
+        conn.sendall(response)
     conn.close()
 
 #Main--------------------------------------------------------------
@@ -112,14 +118,11 @@ def main():
     print("SERVER SIDE: ", HOST, " : ", SERVER_PORT)
 
     while True: 
-        try:
-            conn, addr = mainServer.accept()
-            thr = threading.Thread(target=clientHandler, args=(conn, addr))
-            thr.daemon = True
-            thr.start()
-        except KeyboardInterrupt: 
-            break
-        
+        conn, addr = mainServer.accept()
+        thr = threading.Thread(target=clientHandler, args=(conn, addr))
+        thr.daemon = True
+        thr.start()
+
     print("End")
     mainServer.close()
 
