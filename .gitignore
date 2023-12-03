@@ -2,3 +2,6 @@
 .venv
 env/
 venv/
+
+
+downloaded_videos/
