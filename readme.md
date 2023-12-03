@@ -1,10 +1,12 @@
-This is Subproject of Project Based Learning 3 Project: YouTube Downloader  
+##This is Subproject of Project Based Learning 3 Project: YouTube Downloader  
 ---------------------------------------
 ## How to use
 1. Install Python 3.6 or higher (3.11 is recommended)
-2. Install requirements.txt with 'pip install -r requirements.txt'
-3. Run 'server.py'
-4. Open 'localhost:8080' in your browser
+2. Clone this repository
+3. Set up a virtual environment with 'python -m venv venv'
+4. Install requirements.txt with 'pip install -r requirements.txt'
+5. Run 'server.py'
+6. Open 'localhost:8080' in your browser
 
 ---------------------------------------
 ## Project Structure
@@ -17,6 +19,6 @@ This is Subproject of Project Based Learning 3 Project: YouTube Downloader
 
 ---------------------------------------
 Contributors:
-1. [Siddharth Singh](
-    abc
-)
+1. [Huynh Nhat Anh](https://github.com/hnanh99)
+2. [Huynh Quy](https://github.com/flordst)
+3. [Hoang Cong Thien](https://github.com/sugarete)
