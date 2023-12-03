@@ -68,6 +68,8 @@ def handle_http_request(addr, request):
             return create_response(read_html("app/templates/cpwd.html"))
         elif uri.startswith("/videos/"):
             return yt.createVideoResponse(yt.handle_video_request(request))
+        elif uri == "/home":
+            return create_response(read_html("app/templates/home.html"))
         elif uri == "/vidlist":
             video_list = yt.list_videos()
             return create_response(read_html("app/templates/vidlist.html") + video_list)
