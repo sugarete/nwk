@@ -1,6 +1,6 @@
-This is Subproject of Project Based Learning 3 Project: YouTube Downloader  
+# This is Subproject of Project Based Learning 3 Project: YouTube Downloader  
 ---------------------------------------
-# This project is a web application with socket to download video from YouTube
+## This project is a web application with socket to download video from YouTube
 ---------------------------------------
 ## How to use
 1. Install Python 3.6 or higher (3.11 is recommended)
