@@ -1,8 +1,7 @@
 import socket, threading
 import login as login
-import register as register
+import register as account
 import yt as yt
-import change_pwd as cpwd
 
 #Setup--------------------------------------------------------------
 HOST = "0.0.0.0"
@@ -87,13 +86,13 @@ def handle_http_request(addr, request):
             else:
                 return create_response(read_html("app/templates/login.html") + ErrorLoginResponse(check))
         elif uri == "/register":
-            check = register.register_handle(request)
+            check = account.register_handle(request)
             if check == 0:
                 return create_response(read_html("app/templates/login.html") + ErrorRegisterResponse(check))
             else :
                 return create_response(read_html("app/templates/register.html") + ErrorRegisterResponse(check))
         elif uri == "/cpwd":
-            check = cpwd.change_pwd(request)
+            check = account.change_pwd(request)
             if check == 0:
                 return create_response(read_html("app/templates/login.html") + ErrorChangePwdResponse(check))
             else :
@@ -107,7 +106,7 @@ def handle_http_request(addr, request):
 def clientHandler(conn, addr):
     request = conn.recv(1024).decode(FORMAT)
     if request != "":
-        # print("client addr ", addr, "with request: ", request)
+        print("client addr ", addr, "with request: ", request)
         response = handle_http_request(addr, request)
         conn.sendall(response)
     conn.close()
@@ -121,7 +120,7 @@ def main():
             conn, addr = mainServer.accept()
             thr = threading.Thread(target=clientHandler, args=(conn, addr))
             thr.daemon = True
-            thr.start()
+            thr.start() 
 
     except KeyboardInterrupt:
         print("Shutting down the server...")
