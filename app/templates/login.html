@@ -1,18 +1,77 @@
 <!DOCTYPE html>
-<html>
-<head>
+<html lang="en">
+  <head>
     <link rel="icon" href="data:,">
     <title>Login</title>
-</head>
-<body>
-    <h1>Login</h1>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      form {
+        border: 2px solid #333; /* You can change the color */
+        padding: 20px;
+        border-radius: 10px; /* Adjust the radius as needed */
+        text-align: center;
+        width: 300px; /* Adjust the width as needed */
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input {
+        width: calc(100% - 20px);
+        padding: 10px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+      }
+
+      input[type="submit"] {
+        background-color: #007BFF; /* You can change the color */
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      p {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      a {
+        color: #007BFF; /* You can change the color */
+        text-decoration: none;
+        margin-left: 5px;
+      }
+
+      p a {
+        color: #007BFF; /* You can change the color */
+        text-decoration: none;
+        margin-left: 0;
+      }
+    </style>
+  </head>
+  <body>
     <form action="/" method="POST">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <input type="submit" value="Login">
+      <h1>Login</h1>
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      <input type="submit" value="Login">
+      <p>Don't have an account? <a href="/register">Register</a></p>
     </form>
-    <p>Don't have an account? <a href="/register">Register</a></p>
-</body>
+  </body>
 </html>

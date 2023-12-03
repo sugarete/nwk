@@ -5,16 +5,55 @@
     <link rel="icon" href="data:,">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Youtube Downloader</title>
+    <style>
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      form {
+        border: 2px solid #333; /* You can change the color */
+        padding: 20px;
+        border-radius: 10px; /* Adjust the radius as needed */
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+      }
+
+      button {
+        background-color: #007BFF; /* You can change the color */
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      a {
+        display: block;
+        margin-top: 10px;
+        text-align: center;
+      }
+    </style>
   </head>
   <body>
     <form action="/submit-url" method="POST">
       <label for="url">Enter URL:</label>
       <input type="text" id="url" name="url" required>
       <button type="submit">Submit</button>
+      <a href="/login">Logout</a>
     </form>
-    <a href="/login">Logout</a>
-  </body>
-</html>
-  
   </body>
 </html>
