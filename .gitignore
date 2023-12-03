@@ -5,3 +5,5 @@ venv/
 
 
 downloaded_videos/
+
+__pycache__/
