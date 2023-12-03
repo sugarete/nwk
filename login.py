@@ -10,13 +10,13 @@ def getUserPass(request):
     username = ''.join(request.split("username=")[1].split("&")[0])
     password = ''.join(request.split("password=")[1].split("\n")[0])
     # printing result
-    # print('username : ' + username) 
-    # print('password : ' + password)
+    print('username : ' + username) 
+    print('password : ' + password)
     return username, password
 
 def getPassStatusIndex(username):
     username_index = content[content['username'] == username].index.tolist()
-    # print('username index : ', username_index)
+    print('username index : ', username_index)
     return username_index
     
 
@@ -28,7 +28,7 @@ def checkLogin(request):
         return 2
     else:
         hold_password = content.loc[index, 'password']
-        # print('hold : ', hold_password[0])
+        print('hold : ', hold_password[0])
         if (hold_password[0] != password):
             #Password is incorrect
             return 1
@@ -48,8 +48,5 @@ def replaceStatus(index, new_status):
         # Replace the status
         content.loc[index, 'status'] = new_status
     content.to_csv('usr.csv', index=False)
-
-request = "username=admin&password=admin"
-checkLogin(request)
 
 file.close()

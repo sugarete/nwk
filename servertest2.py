@@ -101,7 +101,7 @@ def handle_http_request(addr, request):
 #Multithreading--------------------------------------------------------------  
 def clientHandler(conn, addr):
     request = conn.recv(1024).decode(FORMAT)
-    print("client addr ", addr, "with request:", request)
+    # print("client addr ", addr, "with request:", request)
     response = handle_http_request(addr, request)
     conn.sendall(response)
     conn.close()
