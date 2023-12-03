@@ -61,12 +61,10 @@ def handle_http_request(addr, request):
     if method == "GET":
         if uri == "/login" or uri == "/":
             return create_response(read_html("app/templates/login.html"))
-        elif uri == "/home":
-            return create_response(read_html("app/templates/home.html"))
         elif uri == "/register":
             return create_response(read_html("app/templates/register.html"))
     elif method == "POST":
-        if uri == "/login":
+        if uri == "/":
             if "username=admin&password=admin" in request:
                 return create_response(read_html("app/templates/home.html"))
             else:
@@ -81,7 +79,7 @@ def handle_http_request(addr, request):
 #Multithreading--------------------------------------------------------------  
 def clientHandler(conn, addr):
     request = conn.recv(1024).decode(FORMAT)
-    # print("client addr ", addr, "with request:", request)
+    print("client addr ", addr, "with request:", request)
     response = handle_http_request(addr, request)
     conn.sendall(response)
     conn.close()
@@ -96,7 +94,7 @@ def main():
         thr = threading.Thread(target=clientHandler, args=(conn, addr))
         thr.daemon = True
         thr.start()
-
+    
     mainServer.close()
     
 #Launch--------------------------------------------------------------
