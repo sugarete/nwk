@@ -117,11 +117,16 @@ def main():
     mainServer = createServerSocket()
     print("SERVER SIDE: ", HOST, " : ", SERVER_PORT)
 
-    while True: 
-        conn, addr = mainServer.accept()
-        thr = threading.Thread(target=clientHandler, args=(conn, addr))
-        thr.daemon = True
-        thr.start()
+    try:
+        while True: 
+            conn, addr = mainServer.accept()
+            thr = threading.Thread(target=clientHandler, args=(conn, addr))
+            thr.daemon = True
+            thr.start()
+
+    except KeyboardInterrupt:
+        print("Shutting down the server...")
+        mainServer.close()
 
     print("End")
     mainServer.close()
