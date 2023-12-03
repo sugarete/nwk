@@ -1,6 +1,7 @@
 from pytube import YouTube
 import socket, os, threading
 from urllib.parse import unquote
+import login as login
 
 #Setup--------------------------------------------------------------
 HOST = "0.0.0.0"
@@ -83,10 +84,10 @@ def handle_http_request(addr, request):
     elif method == "POST":
         if uri == "/":
             logstring = request.splitlines()[-1]
-            if "username=admin&password=admin" in request:
+            if login.checkLogin(logstring) == 0:
                 return create_response(read_html("app/templates/home.html"))
             else:
-                return create_response(read_html("app/templates/login.html") + ErrorLoginResponse(1))
+                return create_response(read_html("app/templates/login.html") + ErrorLoginResponse(login.checkLogin(logstring)))
         elif uri == "/register":
             logstring = request.splitlines()[-1]    
             return create_response(read_html("app/templates/login.html"))
