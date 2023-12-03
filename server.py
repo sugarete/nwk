@@ -1,8 +1,7 @@
-from pytube import YouTube
-import socket, os, threading
-from urllib.parse import unquote
+import socket, threading
 import login as login
 import register as register
+import yt as yt
 
 #Setup--------------------------------------------------------------
 HOST = "0.0.0.0"
@@ -14,34 +13,6 @@ def createServerSocket():
     s.bind((HOST, SERVER_PORT))
     s.listen()
     return s
-
-download_directory = 'downloaded_videos'
-if not os.path.exists(download_directory):
-    os.makedirs(download_directory)
-
-#Authentication---------------------------------------------------------
-
-
-#YoutubeProcessing------------------------------------------------------
-def youtubeProcessing(request):
-    url = request.split("url=")[1].split(" ")[0]
-    url = unquote(url)
-    print("Downloading video at: ", url)
-    yt = YouTube(url)
-    video = yt.streams.get_highest_resolution()
-    video_path = video.download(download_directory)
-    return video_path
-
-def createVideoResponse(video_path):
-    with open (video_path, "rb") as f:
-        video_content = f.read()
-    response = (
-        "HTTP/1.1 200 OK\r\n"
-        f"Content-Disposition: attachment; filename={os.path.basename(video_path)}\r\n"
-        f"Content-Type: video/mp4\r\n"
-        f"Content-Length: {len(video_content)}\r\n\r\n"
-    ).encode(FORMAT) + video_content
-    return response
 
 #ScriptMessage--------------------------------------------------------------
 def ErrorLoginResponse(status):
@@ -76,13 +47,20 @@ def handle_http_request(addr, request):
     request_line = request.split('\n')
     method, uri = request_line[0].split()[:2]
     print("client addr ", addr, "with request: ", method, uri)
+    # Handles HTTP GET requests.Load Page
     if method == "GET":
         if uri == "/login" or uri == "/":
             return create_response(read_html("app/templates/login.html"))
         elif uri == "/register":
             return create_response(read_html("app/templates/register.html"))
+        elif uri == "/vidlist":
+            video_list = yt.list_videos()
+            return create_response(read_html("app/templates/vidlist.html") + video_list)
+        elif uri.startswith("/videos/"):
+            return yt.createVideoResponse(yt.handle_video_request(request))
         else :
             return create_response(read_html("app/templates/404.html"))
+    # Handles HTTP POST requests.Register, Signin, Download
     elif method == "POST":
         if uri == "/":
             logstring = request.splitlines()[-1]
@@ -98,7 +76,7 @@ def handle_http_request(addr, request):
             else :
                 return create_response(read_html("app/templates/register.html") + ErrorRegisterResponse(check))
         elif uri == "/submit-url":
-            return createVideoResponse(youtubeProcessing(request))
+            return yt.createVideoResponse(yt.youtubeProcessing(request))
         else :
             return create_response(read_html("app/templates/404.html"))
     else:
