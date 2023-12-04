@@ -19,7 +19,7 @@ def register_handle(request):
     password = form_data.get(b'password',[b''])[0].decode('utf-8')
     # print('here')
     # check username
-    if len(password)<5:
+    if len(password)<4:
         return 1 #qua yeu 
     else:
         if is_username_registered(username):
