@@ -5,10 +5,11 @@
 ## How to use
 1. Install Python 3.6 or higher (3.11 is recommended)
 2. Clone this repository
-3. Set up a virtual environment with 'python -m venv venv'
-4. Install requirements.txt with 'pip install -r requirements.txt'
-5. Run 'server.py'
-6. Open 'localhost:8080' in your browser
+3. Make sure you open the workspace in the repository folder
+4. Set up a virtual environment with 'python -m venv venv'
+5. Install requirements.txt with 'pip install -r requirements.txt'
+6. Run 'server.py'
+7. Open 'localhost:8080' in your browser
 
 ---------------------------------------
 ## Project Structure
